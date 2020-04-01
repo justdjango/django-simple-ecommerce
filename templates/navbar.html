@@ -1,0 +1,12 @@
+<nav class="site-navigation text-right text-md-center" role="navigation">
+    <div class="container">
+        <ul class="site-menu js-clone-nav d-none d-md-block" style="padding: 0;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/">Shop</a></li>
+            <li><a href="/">Contact</a></li>
+            {% if request.user.is_staff %}
+                <li><a href="/">Staff</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
