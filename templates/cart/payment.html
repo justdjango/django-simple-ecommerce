@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+
+    .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border: 8px solid rgb(155, 81, 81);
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: rgb(155, 81, 81) transparent transparent transparent;
+    }
+
+    .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+    }
+
+    .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+    }
+
+    .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+    }
+
+    @keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class='container'>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success" role="alert" id="alertSuccess" style="display: none;">
+                Your payment was successful.
+            </div>
+            <div class="alert alert-danger" role="alert" id="alertFailure" style="display: none;">
+                Your payment failed. Please try again.
+            </div>
+
+            <div class="text-center py-3">
+                <div id="loader" class="lds-ring" style="margin: auto; display: none;">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div id='paymentInfo'>
+                <p>Order total: ${{ order.get_total }}</p>
+                <h4>Select a payment method</h4>
+                <div id="paypal-button-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+
+<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}">
+</script>
+
+<script>
+
+    const loader = document.getElementById('loader');
+    const paymentInfo = document.getElementById('paymentInfo');
+
+    function toggleLoader(on) {
+        loader.style.display = on === true ? "block" : "none";
+        paymentInfo.style.display = on === true ? "none" : "block";
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    function sendOrderConfirmed(details) {
+        return fetch("{% url 'cart:confirm-order' %}", {
+            method: "post",
+            body: JSON.stringify(details),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            }
+        })
+    }
+
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ order.get_total }}'
+                    }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            toggleLoader(true);
+            // This function captures the funds from the transaction.
+            return actions.order.capture().then(function (details) {
+                // This function shows a transaction success message to your buyer.
+                sendOrderConfirmed(details).then(res => {
+                    toggleLoader(false);
+                    const alertSuccess = document.getElementById('alertSuccess');
+                    alertSuccess.style.display = 'block';
+                    setTimeout(function () {
+                        window.location.replace("{{ CALLBACK_URL }}")
+                    }, 3000);
+                })
+            })
+                .catch(err => {
+                    const alertFailure = document.getElementById('alertFailure');
+                    alertFailure.style.display = 'block';
+                })
+                .finally(() => toggleLoader(false));
+        }
+    }).render('#paypal-button-container');
+</script>
+
+{% endblock scripts %}
