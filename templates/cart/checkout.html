@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a><span class="mx-2 mb-0">/</span>
+                <a href="{% url 'cart:summary' %}" class="text-black">Cart</a><span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Checkout</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section">
+    <div class="container">
+        {% if not request.user.is_authenticated %}
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="border p-4 rounded" role="alert">
+                    You are nearly finished with your order.
+                    To finalize your order, please <a>Login</a> or <a>Signup</a>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90"
+                        aria-valuemin="0" aria-valuemax="100">90% complete</div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <h2 class="h3 mb-3 text-black text-center">Billing Details</h2>
+                    <hr />
+                    {{ form|crispy }}
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg py-3 btn-block">
+                            Proceed to payment
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <h2 class="h3 mb-3 text-black text-center">Your Order</h2>
+                            <hr>
+                            <div class="p-3 p-lg-5">
+                                <table class="table site-block-order-table mb-5">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>
+                                                {{ item.size.name }}, {{ item.colour.name }} {{ item.product.title }}
+                                                <strong class="mx-2">x</strong> {{ item.quantity }}
+                                            </td>
+                                            <td>
+                                                ${{ item.get_total_item_price }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td><strong>Subtotal</strong></td>
+                                            <td>${{ order.get_subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong class="text-black font-weight-bold">Order Total</strong></td>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    ${{ order.get_total }}
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
