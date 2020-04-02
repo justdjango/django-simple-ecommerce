@@ -20,11 +20,20 @@ class ProductDetailView(generic.FormView):
     def get_success_url(self):
         return reverse("home")  # TODO: cart
 
+    def get_form_kwargs(self):
+        kwargs = super(ProductDetailView, self).get_form_kwargs()
+        kwargs["product_id"] = self.get_object().id
+        return kwargs
+
     def form_valid(self, form):
         order = get_or_set_order_session(self.request)
         product = self.get_object()
 
-        item_filter = order.items.filter(product=product)
+        item_filter = order.items.filter(
+            product=product,
+            colour=form.cleaned_data['colour'],
+            size=form.cleaned_data['size'],
+        )
 
         if item_filter.exists():
             item = item_filter.first()
