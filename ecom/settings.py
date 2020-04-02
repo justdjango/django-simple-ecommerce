@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
 
+    'cart',
     'core'
 ]
 
