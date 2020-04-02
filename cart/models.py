@@ -71,7 +71,7 @@ class Payment(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name='payments')
     payment_method = models.CharField(max_length=20, choices=(
-        ('PayPal', 'PayPal')
+        ('PayPal', 'PayPal'),
     ))
     timestamp = models.DateTimeField(auto_now_add=True)
     successful = models.BooleanField(default=False)
