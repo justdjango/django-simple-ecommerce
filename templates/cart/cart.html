@@ -46,13 +46,15 @@
                                 <td>
                                     <div class="input-group mb-3" style="max-width: 120px;">
                                         <div class="input-group-prepend">
-                                            <a href="{% url 'cart:decrease-quantity' item.id %}" class="btn btn-outline-primary">
+                                            <a href="{% url 'cart:decrease-quantity' item.id %}"
+                                                class="btn btn-outline-primary">
                                                 &minus;
                                             </a>
                                         </div>
                                         <input type="text" class="form-control text-center" value="{{ item.quantity }}">
                                         <div class="input-group-append">
-                                            <a href="{% url 'cart:increase-quantity' item.id %} " class="btn btn-outline-primary">
+                                            <a href="{% url 'cart:increase-quantity' item.id %} "
+                                                class="btn btn-outline-primary">
                                                 &plus;
                                             </a>
                                         </div>
@@ -62,7 +64,8 @@
                                     ${{ item.get_total_item_price }}
                                 </td>
                                 <td>
-                                    <a href="{% url 'cart:remove-from-cart' item.id %}" class="btn btn-primary btn-sm">X</a>
+                                    <a href="{% url 'cart:remove-from-cart' item.id %}"
+                                        class="btn btn-primary btn-sm">X</a>
                                 </td>
                             </tr>
                             {% empty %}
@@ -78,6 +81,58 @@
                 </div>
             </div>
         </div>
+
+        {% if order.items.count > 0 %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <a class="btn btn-outline-primary btn-sm btn-block"
+                            href="{% url 'cart:product-list' %}">Continue shopping</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 pl-5">
+                <div class="row justify-content-end">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 text-right border-bottom mb-5">
+                                <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <span class="text-black">Subtotal</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black">${{ order.get_subtotal }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <span class="text-black">Total</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black">${{ order.get_total }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="btn btn-primary btn-lg py-3 btn-block" href="#">Proceed to checkout</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
     </div>
 </div>
 
