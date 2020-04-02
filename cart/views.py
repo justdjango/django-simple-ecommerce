@@ -52,3 +52,12 @@ class ProductDetailView(generic.FormView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['product'] = self.get_object()
         return context
+
+
+class CartView(generic.TemplateView):
+    template_name = "cart/cart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CartView, self).get_context_data(**kwargs)
+        context["order"] = get_or_set_order_session(self.request)
+        return context

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a>
+                <span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Cart</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="site-blocks-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td class="product-thumbnail">
+                                    <img src="{{ item.product.image.url }}" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black">{{ item.product.title }}</h2>
+                                    <small>Size: {{ item.size.name }}</small>
+                                    <small>Colour: {{ item.colour.name }}</small>
+                                </td>
+                                <td>$0</td>
+                                <td>
+                                    <div class="input-group mb-3" style="max-width: 120px;">
+                                        <div class="input-group-prepend">
+                                            <a href="#" class="btn btn-outline-primary">
+                                                &minus;
+                                            </a>
+                                        </div>
+                                        <input type="text" class="form-control text-center" value="{{ item.quantity }}">
+                                        <div class="input-group-append">
+                                            <a href="#" class="btn btn-outline-primary">
+                                                &plus;
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    $0
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-primary btn-sm">X</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
