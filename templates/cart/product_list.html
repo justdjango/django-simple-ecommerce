@@ -21,11 +21,11 @@
             <div class="col-lg-4 col-md-6 mb-4" data-aos='fade-up'>
 
                 <figure class="block-4-image">
-                    <a><img src="{{ product.image.url }}" class="img-fluid"></a>
+                    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" class="img-fluid"></a>
                 </figure>
 
                 <div class="block-4-text p-4">
-                    <a>
+                    <a href="{{ product.get_absolute_url }}">
                         <h3>{{ product.title }}</h3>
                     </a>
                     <p class="mb-0">{{ product.description }}</p>
