@@ -7,6 +7,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <h2 class="text-black">Staff Portal - Products</h2>
+                <a href="{% url 'staff:product-create' %}">Create a product</a>
                 <div class="card">
                     <div class="card-body">
                         <div class="site-blocks-table">
@@ -24,30 +25,60 @@
                                         <td>{{ product.title }}</td>
                                         <td>${{ product.get_price }}</td>
                                         <td>
-                                            <a href="#">Update</a>
-                                            <a 
-                                            tabindex="0" 
-                                            class="btn btn-sm btn-primary"
-                                            role='button'
-                                            data-html='true'
-                                            data-toggle='popover'
-                                            data-trigger='focus'
-                                            title='Are you sure you want to delete this product?'
-                                            data-content="<a href='{{ product.get_delete_url }}'>Confirm</a>"
-                                            >
-                                            X
+                                            <a href="{{ product.get_update_url }}">Update</a>
+                                            <a tabindex="0" class="btn btn-sm btn-primary" role='button'
+                                                data-html='true' data-toggle='popover' data-trigger='focus'
+                                                title='Are you sure you want to delete this product?'
+                                                data-content="<a href='{{ product.get_delete_url }}'>Confirm</a>">
+                                                X
                                             </a>
 
                                         </td>
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="4">You don't have any products</td>
+                                        <td colspan="3">You don't have any products</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+
+                        {% if page_obj.has_other_pages %}
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="site-block-27">
+                                    <ul>
+                                        {% if page_obj.has_previous %}
+                                            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                                        {% else %}
+                                            <li class='disabled'><span>&laquo;</span></li>
+                                        {% endif %}
+
+                                        {% for i in paginator.page_range %}
+                                            {% if page_obj.number == i %}
+                                                <li class='active'>
+                                                    <span>
+                                                    {{ i }}
+                                                     <span class='sr-only'>(current)</span>
+                                                    </span>
+                                                </li>
+                                            {% else %}
+                                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if page_obj.has_next %}
+                                            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                                        {% else %}
+                                            <li class='disabled'><span>&raquo;</span></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
