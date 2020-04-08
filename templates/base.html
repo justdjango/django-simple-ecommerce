@@ -5,6 +5,8 @@
 <html lang="en">
 <head>
     <title>Django Ecom {% block head_title %}{% endblock %}</title>
+    {% block extra_head %}
+    {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-icon-57x57.png' %}">
@@ -59,9 +61,9 @@
                             <ul>
                                 <li>
                                     {% if request.user.is_authenticated %}
-                                        <a href="/"><span><i class="fas fa-user"></i></span></a>
+                                        <a href="{% url 'profile' %}"><span><i class="fas fa-user"></i></span></a>
                                     {% else %}
-                                        <a href="/"><span><i
+                                        <a href="{% url 'account_login' %}"><span><i
                                                 class="fas fa-sign-in-alt"></i></span></a>
                                     {% endif %}
                                 </li>

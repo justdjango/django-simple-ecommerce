@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h2 class="text-black">Your profile</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ request.user.email }}
+                            <a href="{% url 'account_logout' %}">
+                                <small class="float-right">Logout</small></a>
+                        </h5>
+                        <hr />
+                        <h5 class="card-title">Your orders</h5>
+                        <div class="site-blocks-table">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference No.</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Payment Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr>
+                                        <td>#{{ order.reference_number }}</td>
+                                        <td>{{ order.ordered_date }}</td>
+                                        <td>${{ ordered.get_total }}</td>
+                                        <td>{% if order.paid %}Paid{% else %}Not paid{% endif %}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">You haven't made any orders</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
