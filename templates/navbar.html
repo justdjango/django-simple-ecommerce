@@ -5,7 +5,7 @@
             <li><a href="{% url 'cart:product-list' %}">Shop</a></li>
             <li><a href="{% url 'contact' %}">Contact</a></li>
             {% if request.user.is_staff %}
-                <li><a href="/">Staff</a></li>
+                <li><a href="{% url 'staff:staff' %}">Staff</a></li>
             {% endif %}
         </ul>
     </div>
