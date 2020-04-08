@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h2 class="text-black">Staff Portal - Products</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="site-blocks-table">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Title.</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in products %}
+                                    <tr>
+                                        <td>{{ product.title }}</td>
+                                        <td>${{ product.get_price }}</td>
+                                        <td>
+                                            <a href="#">Update</a>
+                                            <a 
+                                            tabindex="0" 
+                                            class="btn btn-sm btn-primary"
+                                            role='button'
+                                            data-html='true'
+                                            data-toggle='popover'
+                                            data-trigger='focus'
+                                            title='Are you sure you want to delete this product?'
+                                            data-content="<a href='{{ product.get_delete_url }}'>Confirm</a>"
+                                            >
+                                            X
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">You don't have any products</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $("[data-toggle=popover]").popover();
+    });
+</script>
+{% endblock scripts %}
