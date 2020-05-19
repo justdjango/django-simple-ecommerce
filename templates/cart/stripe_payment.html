@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #cef;
+  border-color: #cef transparent #cef transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+
+<div class='container'>
+    <div class='row justify-content-center'>
+        <div class="col-md-6">
+            <div id="loader" class="lds-dual-ring" style="display: none;"></div>
+            <form id="paymentForm" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <select id="cardOptions" name="selectedCard" class="form-control">
+                        <option value="newCard">Use a new card</option>
+                        {% for card in payment_methods %}
+                            <option value="{{ card.pm_id }}">{{ card.brand }} - {{ card.exp_year }}/{{ card.exp_month }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="stripeCardForm">
+                    <div id="card-element">
+                    <!-- Elements will create input elements here -->
+                    </div>
+
+                    <!-- We'll put the error messages in this element -->
+                    <div id="card-errors" role="alert"></div>
+                </div>
+
+                <button class="btn btn-primary btn-block mt-3" id="submitBtn">Pay</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+var stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+var elements = stripe.elements();
+
+var form = document.getElementById("paymentForm");
+var stripeForm = document.getElementById("stripeCardForm")
+var loader = document.getElementById("loader");
+
+var cardOptionSelect = document.getElementById('cardOptions');
+
+function getSelectedCardOptionValue() {
+    return cardOptionSelect.options[cardOptionSelect.selectedIndex].value;
+}
+
+function toggleStripeForm(selectedCardOptionValue) {
+    if (selectedCardOptionValue === "newCard") {
+        stripeForm.style.display = "block";
+    } else {
+        stripeForm.style.display = "none";
+    }
+}
+
+var selectedCardOptionValue = getSelectedCardOptionValue();
+toggleStripeForm(selectedCardOptionValue);
+
+cardOptionSelect.addEventListener("change", e => {
+    toggleStripeForm(e.target.value)
+})
+
+function toggleLoader(status) { 
+  var display = status ? "block" : "none";
+  loader.style.display = display
+}
+
+// Set up Stripe.js and Elements to use in checkout form
+var style = {
+  base: {
+    color: "#32325d",
+  }
+};
+
+var card = elements.create("card", { style: style });
+card.mount("#card-element");
+
+card.on('change', function(event) {
+  var displayError = document.getElementById('card-errors');
+  if (event.error) {
+    displayError.textContent = event.error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+document.getElementById("paymentForm").addEventListener("submit", e => {
+    e.preventDefault();
+    toggleLoader(true);
+
+    var selectedCardOptionValue = getSelectedCardOptionValue();
+    var selectedCard = card;
+    if (selectedCardOptionValue !== "newCard") {
+        form.submit()
+    } else {
+        stripe.confirmCardPayment("{{ client_secret }}", {
+            payment_method: {
+                card: card,
+            },
+            setup_future_usage: 'off_session'
+        })
+        .then(function(result) {
+            toggleLoader(false);
+            if (result.error) {
+                // Show error to your customer
+                console.log(result.error.message);
+            } else {
+                if (result.paymentIntent.status === 'succeeded') {
+                // Show a success message to your customer
+                // There's a risk of the customer closing the window before callback execution
+                // Set up a webhook or plugin to listen for the payment_intent.succeeded event
+                // to save the card to a Customer
+
+                // The PaymentMethod ID can be found on result.paymentIntent.payment_method
+                    form.submit()
+                }
+            }
+        });
+    }
+
+    
+
+})
+
+
+</script>
+
+{% endblock content %}

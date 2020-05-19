@@ -68,6 +68,9 @@
             <div id='paymentInfo'>
                 <p>Order total: ${{ order.get_total }}</p>
                 <h4>Select a payment method</h4>
+                <div>
+                    <a href="{% url 'cart:payment-stripe' %}" class="btn btn-secondary btn-block mb-3">Stripe</a>
+                </div>
                 <div id="paypal-button-container"></div>
             </div>
         </div>
