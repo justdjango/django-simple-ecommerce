@@ -3,7 +3,7 @@ autopep8==1.5.1
 certifi==2020.4.5.1
 chardet==3.0.4
 defusedxml==0.6.0
-Django==3.0.5
+Django==3.0.6
 django-allauth==0.41.0
 django-crispy-forms==1.9.0
 django-environ==0.4.5

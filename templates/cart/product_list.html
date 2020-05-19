@@ -17,21 +17,38 @@
 <div class="site-section">
     <div class="container">
         <div class="row mb-5">
-            {% for product in object_list %}
-            <div class="col-lg-4 col-md-6 mb-4" data-aos='fade-up'>
+            <div class="col-md-9 mb-4">
+                <div class="row mb-5">
+                    {% for product in object_list %}
+                        <div class="col-sm-6 col-md-6 col-lg-4 mb-4" data-aos='fade-up'>
+                            <figure class="block-4-image">
+                                <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" class="img-fluid"></a>
+                            </figure>
 
-                <figure class="block-4-image">
-                    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" class="img-fluid"></a>
-                </figure>
-
-                <div class="block-4-text p-4">
-                    <a href="{{ product.get_absolute_url }}">
-                        <h3>{{ product.title }}</h3>
-                    </a>
-                    <p class="mb-0">{{ product.description }}</p>
+                            <div class="block-4-text p-4">
+                                <a href="{{ product.get_absolute_url }}">
+                                    <h3>{{ product.title }}</h3>
+                                </a>
+                                <p class="mb-0">{{ product.description }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
+            <div class="col-md-3 mb-4">
+                <div class="border p-4 rounded mb-4">
+                    <h3 class="h6 text-uppercase text-black">Categories</h3>
+                    <ul>
+                        {% for category in categories %}
+                        <li class="mb-1">
+                            <a href="?category={{ category.name }}" class="d-flex">
+                                <span>{{ category.name }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
