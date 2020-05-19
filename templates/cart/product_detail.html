@@ -23,11 +23,16 @@
             <div class="col-md-6">
                 <h2 class="text-black">{{ product.title }}</h2>
                 <p>{{ product.description }}</p>
+                <p>Available stock: {{ product.stock }} units</p>
+                {% if product.in_stock %}
                 <form method="POST">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <button type='submit' class="btn btn-sm btn-primary buy-now">Add to cart</button>
                 </form>
+                {% else %}
+                <p>This item is out of stock</p>
+                {% endif %}
             </div>
         </div>
     </div>
