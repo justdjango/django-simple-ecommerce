@@ -1,5 +1,3 @@
-# Django Simple E-commerce
-
 <p align="center">
   <p align="center">
     <a href="https://justdjango.com/?utm_source=github&utm_medium=logo" target="_blank">
@@ -11,7 +9,9 @@
   </p>
 </p>
 
-This is a simple E-commerce website built with Django. It contains all the essentials for adding products and capturing payments
+# Django Simple E-commerce
+
+This is a simple e-commerce website built with Django. It contains the essentials for adding products and capturing payments
 online.
 
 This project is part of a course on [JustDjango](https://learn.justdjango.com)
