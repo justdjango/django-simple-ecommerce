@@ -3,7 +3,7 @@
 
 * Books
 * Food
-* Cars
+* Jets
 * Games
 
 Hello, my name is abubakar zakari, an aspiring web developer.

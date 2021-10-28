@@ -1,4 +1,4 @@
-Transmission control protocol/internet protocol is an implementation of the OSI model, it's based on protocols around which the internet has been developed.
+Transmission Control Protocol/Internet Protocol is an implementation of the OSI model, it's based on protocols around which the internet has been developed.
 It allows one computer to talk to another computer via the internet by compiling packets of data and sending them to the right locations. Tcp/ip is a 
 layered process that comprises of 4 layers;
 
